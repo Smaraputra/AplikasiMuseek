@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="10dp"
+    android:background="@android:color/transparent"
+    android:backgroundTint="@android:color/transparent"
+    android:gravity="center"
+    android:minWidth="390dp"
+    android:orientation="vertical"
+    card_view:layout_anchorGravity="center">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                card_view:cardCornerRadius="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        card_view:cardCornerRadius="0dp"
+                        card_view:cardElevation="20dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#EFEFEF"
+                            android:backgroundTint="#EFEFEF"
+                            android:orientation="vertical"
+                            android:paddingBottom="0dp">
+
+                            <TextView
+                                android:id="@+id/judulasetpop"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/merahsoft"
+                                android:drawableLeft="@drawable/ic_baseline_format_align_justify_24"
+                                android:gravity="center"
+                                android:paddingLeft="15dp"
+                                android:paddingTop="15dp"
+                                android:paddingRight="15dp"
+                                android:paddingBottom="15dp"
+                                android:text="Registration Detail"
+                                android:textColor="#FFFFFF"
+                                android:textSize="20sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="550dp"
+                        android:background="#EFEFEF"
+                        android:backgroundTint="#EFEFEF">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:padding="15dp">
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                card_view:cardCornerRadius="15dp">
+
+                                <TextView
+                                    android:id="@+id/titleidneraca"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:background="@color/merahsoft"
+                                    android:gravity="center"
+                                    android:padding="5dp"
+                                    android:text="Name"
+                                    android:textColor="#FFFFFF"
+                                    android:textStyle="bold" />
+
+                            </androidx.cardview.widget.CardView>
+
+                            <TextView
+                                android:id="@+id/isinama"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="15dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:padding="5dp"
+                                android:text="TextView"
+                                android:textSize="18sp" />
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                card_view:cardCornerRadius="15dp">
+
+                                <TextView
+                                    android:id="@+id/titlekataset"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:background="@color/merahsoft"
+                                    android:gravity="center"
+                                    android:padding="5dp"
+                                    android:text="Phone Number"
+                                    android:textColor="#FFFFFF"
+                                    android:textStyle="bold" />
+                            </androidx.cardview.widget.CardView>
+
+                            <TextView
+                                android:id="@+id/isinomor"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="15dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:padding="5dp"
+                                android:text="TextView"
+                                android:textSize="18sp" />
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                card_view:cardCornerRadius="15dp">
+
+                                <TextView
+                                    android:id="@+id/titleperiode"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:background="@color/merahsoft"
+                                    android:gravity="center"
+                                    android:padding="5dp"
+                                    android:text="Address"
+                                    android:textColor="#FFFFFF"
+                                    android:textStyle="bold" />
+                            </androidx.cardview.widget.CardView>
+
+                            <TextView
+                                android:id="@+id/isialamat"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="15dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:padding="5dp"
+                                android:text="TextView"
+                                android:textSize="18sp" />
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                card_view:cardCornerRadius="15dp">
+
+                                <TextView
+                                    android:id="@+id/titletanggalcatat"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:background="@color/merahsoft"
+                                    android:gravity="center"
+                                    android:padding="5dp"
+                                    android:text="Username"
+                                    android:textColor="#FFFFFF"
+                                    android:textStyle="bold" />
+                            </androidx.cardview.widget.CardView>
+
+                            <TextView
+                                android:id="@+id/isiuser"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="15dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:padding="5dp"
+                                android:text="TextView"
+                                android:textSize="18sp" />
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                card_view:cardCornerRadius="15dp">
+
+                                <TextView
+                                    android:id="@+id/titlenilai"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:background="@color/merahsoft"
+                                    android:gravity="center"
+                                    android:padding="5dp"
+                                    android:text="Password"
+                                    android:textColor="#FFFFFF"
+                                    android:textStyle="bold" />
+
+                            </androidx.cardview.widget.CardView>
+
+                            <TextView
+                                android:id="@+id/isipass"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="15dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:padding="5dp"
+                                android:text="TextView"
+                                android:textSize="18sp" />
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                card_view:cardCornerRadius="15dp">
+
+                                <TextView
+                                    android:id="@+id/titleketerangan"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:background="@color/merahsoft"
+                                    android:gravity="center"
+                                    android:padding="5dp"
+                                    android:text="Gender"
+                                    android:textColor="#FFFFFF"
+                                    android:textStyle="bold" />
+                            </androidx.cardview.widget.CardView>
+
+                            <TextView
+                                android:id="@+id/isigender"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="15dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:padding="5dp"
+                                android:text="TextView"
+                                android:textSize="18sp" />
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                card_view:cardCornerRadius="15dp">
+
+                                <TextView
+                                    android:id="@+id/titlehobi"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:background="@color/merahsoft"
+                                    android:gravity="center"
+                                    android:padding="5dp"
+                                    android:text="Instrument Skill"
+                                    android:textColor="#FFFFFF"
+                                    android:textStyle="bold" />
+                            </androidx.cardview.widget.CardView>
+
+                            <TextView
+                                android:id="@+id/isiskill"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="15dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:padding="5dp"
+                                android:text="TextView"
+                                android:textSize="18sp" />
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                card_view:cardCornerRadius="15dp">
+
+                                <TextView
+                                    android:id="@+id/titlewaktu"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:background="@color/merahsoft"
+                                    android:gravity="center"
+                                    android:padding="5dp"
+                                    android:text="Instrument Usage Perday (Hour)"
+                                    android:textColor="#FFFFFF"
+                                    android:textStyle="bold" />
+                            </androidx.cardview.widget.CardView>
+
+                            <TextView
+                                android:id="@+id/isiwaktu"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:padding="5dp"
+                                android:text="TextView"
+                                android:textSize="18sp" />
+
+                        </LinearLayout>
+                    </ScrollView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="0dp"
+                        android:background="#EFEFEF"
+                        android:backgroundTint="#EFEFEF"
+                        android:orientation="horizontal"
+                        android:paddingTop="10dp">
+
+                        <Button
+                            android:id="@+id/tombolbatalbatal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="0dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="#E4E4E4"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:padding="15dp"
+                            android:text="CANCEL"
+                            android:textColor="@color/merahsoft"
+                            card_view:cornerRadius="0dp" />
+
+                        <Button
+                            android:id="@+id/tombolkirimkirim"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/merahsoft"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:padding="15dp"
+                            android:text="SUBMIT"
+                            card_view:cornerRadius="0dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
