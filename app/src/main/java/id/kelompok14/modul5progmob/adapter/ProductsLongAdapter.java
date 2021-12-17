@@ -61,13 +61,13 @@ public class ProductsLongAdapter extends RecyclerView.Adapter<ProductsLongAdapte
         holder.nama.setText(product.getName_product());
         holder.harga.setText(formatRupiah.format(product.getPrice_product()));
         holder.ratingBar.setRating(product.getRating_product());
+
         if(productImages.size()>0){
-            holder.imageView.setImageBitmap(stringToBitmap(productImages.get(position).getGambar()));
-//            for(int i = 0; i <= productImages.size(); i++){
-//                if(idprod==productImages.get(i).getId_product()){
-//
-//                }
-//            }
+            for(int i = 0; i < productImages.size(); i++) {
+                if (product.getId_product() == productImages.get(i).getId_product()) {
+                    holder.imageView.setImageBitmap(stringToBitmap(productImages.get(i).getGambar()));
+                }
+            }
         }
 
         if(product.getStock_product()==0){

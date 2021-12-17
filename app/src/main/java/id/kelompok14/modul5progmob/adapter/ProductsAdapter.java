@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Handler;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -90,14 +91,12 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
         holder.harga.setText(formatRupiah.format(product.getPrice_product()));
         holder.ratingBar.setRating(product.getRating_product());
 
-        int idprod = products.get(position).getId_product();
         if(productImages.size()>0){
-            holder.imageView.setImageBitmap(stringToBitmap(productImages.get(position).getGambar()));
-//            for(int i = 0; i <= productImages.size(); i++){
-//                if(idprod==productImages.get(i).getId_product()){
-//
-//                }
-//            }
+            for(int i = 0; i < productImages.size(); i++) {
+                if (product.getId_product() == productImages.get(i).getId_product()) {
+                    holder.imageView.setImageBitmap(stringToBitmap(productImages.get(i).getGambar()));
+                }
+            }
         }
 
         if(product.getStock_product()==0){
