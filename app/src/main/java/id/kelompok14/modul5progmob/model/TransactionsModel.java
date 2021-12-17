@@ -6,9 +6,9 @@ public class TransactionsModel {
     private int id_transaction, id_user_transaction,  id_product_transaction, total_transaction, total_product, rating;
 
     public TransactionsModel(int id_transaction, int id_user_transaction, int id_product_transaction
-            , int total_transaction, int total_product, int rating
             , String start_transaction, String end_transaction
-            , String date_transaction, String status_transaction, String status_rating_transaction
+            , int total_product, int total_transaction, String status_transaction, int rating
+            , String status_rating_transaction, String date_transaction
             , String deadline_payment, String status_payment, String proof) {
         this.id_transaction = id_transaction;
         this.id_user_transaction = id_user_transaction;

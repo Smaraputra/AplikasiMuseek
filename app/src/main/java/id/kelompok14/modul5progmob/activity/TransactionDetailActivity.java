@@ -8,10 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -31,6 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -47,7 +51,7 @@ import id.kelompok14.modul5progmob.model.TransactionsModel;
 
 public class TransactionDetailActivity extends AppCompatActivity {
 
-    Button backToTrans, addRating, addPayment;
+    Button backToTrans, addRating, addPayment, cancel;
     TextView namaproduk, start, end, totalIns, total, status,
             date, rating, status_rating, deadline, status_payment;
     int idtrans, iduser;
@@ -55,7 +59,7 @@ public class TransactionDetailActivity extends AppCompatActivity {
     String token;
     ImageView buktiBayar;
     ProgressDialog dialog;
-
+    Bitmap bukti;
     Uri uri;
     SharedPreferences sharedPreferences;
 
@@ -80,13 +84,7 @@ public class TransactionDetailActivity extends AppCompatActivity {
         token = sharedPreferences.getString("token", "defaultValues");
         dialog = new ProgressDialog(TransactionDetailActivity.this);
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getTransaction();
-            }
-        }, 0);
+        getTransaction();
 
         transaction = dbHandler.getTransactionOnIDTRANS(idtrans);
         product = dbHandler.getProductsOnID(transaction.get(0).getId_product_transaction());
@@ -94,6 +92,7 @@ public class TransactionDetailActivity extends AppCompatActivity {
         addRating = (Button) findViewById(R.id.tombolTambahRatingTrans);
         addPayment = (Button) findViewById(R.id.tambahBayarTrans);
         backToTrans = (Button) findViewById(R.id.backTrans);
+        cancel = (Button) findViewById(R.id.tombolCancelTrans);
         namaproduk = (TextView) findViewById(R.id.kolomProdTrans);
         start = (TextView) findViewById(R.id.kolomStartTrans);
         end = (TextView) findViewById(R.id.kolomEndTrans);
@@ -139,14 +138,43 @@ public class TransactionDetailActivity extends AppCompatActivity {
             addRating.setBackgroundColor(addRating.getContext().getResources().getColor(R.color.abusoft));
         }
 
-        addPayment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intentGetPayment = new Intent(Intent.ACTION_PICK);
-                intentGetPayment.setType("image/*");
-                startActivityForResult(intentGetPayment, selectPayment);
-            }
-        });
+        if(!transaction.get(0).getStatus_payment().equals("Not Yet")){
+            getImage();
+            buktiBayar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getImage();
+                }
+            });
+        }
+
+        if(transaction.get(0).getStatus_payment().equals("Proof Uploaded")){
+            addPayment.setText("Update proof of payment");
+        }
+
+        if(transaction.get(0).getStatus_payment().equals("Verified")){
+            addPayment.setClickable(false);
+            addPayment.setVisibility(View.GONE);
+            cancel.setClickable(false);
+            cancel.setVisibility(View.GONE);
+        }else{
+            addPayment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intentGetPayment = new Intent(Intent.ACTION_PICK);
+                    intentGetPayment.setType("image/*");
+                    startActivityForResult(intentGetPayment, selectPayment);
+                    status_payment.setText("Proof Uploaded");
+                }
+            });
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    deleteTransaction();
+                }
+            });
+        }
+
     }
 
     @Override
@@ -155,8 +183,9 @@ public class TransactionDetailActivity extends AppCompatActivity {
         if(requestCode == selectPayment && resultCode == RESULT_OK && data != null && data.getData() != null){
             uri = data.getData();
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                buktiBayar.setImageBitmap(bitmap);
+                bukti = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                buktiBayar.setImageBitmap(bukti);
+                sendImage();
             } catch (FileNotFoundException e){
                 e.printStackTrace();
             } catch (IOException e){
@@ -196,12 +225,12 @@ public class TransactionDetailActivity extends AppCompatActivity {
                                     transObject.getString("end_transaction"),
                                     transObject.getInt("total_product"),
                                     transObject.getInt("total_transaction"),
-                                    transObject.getString("status_rating_transaction"),
-                                    transObject.getInt("rating"),
                                     transObject.getString("status_transaction"),
+                                    transObject.getInt("rating"),
+                                    transObject.getString("status_rating_transaction"),
                                     transObject.getString("date_transaction"),
-                                    transObject.getString("status_payment"),
                                     transObject.getString("deadline_payment"),
+                                    transObject.getString("status_payment"),
                                     transObject.getString("proof"));
                         }
                     }
@@ -234,5 +263,201 @@ public class TransactionDetailActivity extends AppCompatActivity {
         };
 
         requestQueue.add(jsonObjectRequest);
+    }
+
+    private void deleteTransaction() {
+        dialog.setMessage("Cancelling Transaction.");
+        dialog.show();
+        String postUrl = Constant.DELETE_TRANSACTION;
+        RequestQueue requestQueue = Volley.newRequestQueue(TransactionDetailActivity.this);
+
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("id_transaction", idtrans);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, postUrl, postData, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONObject object = response;
+                try {
+                    if (object.getBoolean("success")){
+                        Context context = TransactionDetailActivity.this;
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast sukses = Toast.makeText(context, "Deleting Transaction Success.", duration);
+                        sukses.show();
+                        Intent intent = new Intent(TransactionDetailActivity.this, DashboardAppActivity.class);
+                        startActivity(intent);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Context context = TransactionDetailActivity.this;
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast gagal = Toast.makeText(context, "Deleting Transaction Failed.", duration);
+                    gagal.show();
+                }
+                dialog.dismiss();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                Context context = TransactionDetailActivity.this;
+                int duration = Toast.LENGTH_SHORT;
+                Toast gagal = Toast.makeText(context, "Deleting Transaction Failed.", duration);
+                gagal.show();
+                dialog.dismiss();
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String,String> map = new HashMap<>();
+                map.put("Authorization","Bearer "+ token);
+                return map;
+            }
+        };
+
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    private void sendImage() {
+        dialog.setMessage("Sending Payment Data.");
+        dialog.show();
+        String postUrl = Constant.EDIT_PAYMENT;
+        RequestQueue requestQueue = Volley.newRequestQueue(TransactionDetailActivity.this);
+
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("id_transaction", idtrans);
+            postData.put("img", bitmapToString(bukti));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, postUrl, postData, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONObject object = response;
+                try {
+                    if (object.getBoolean("success")) {
+                        Context context = TransactionDetailActivity.this;
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast sukses = Toast.makeText(context, "Payment Data Sent.", duration);
+                        sukses.show();
+                    }
+                } catch (JSONException e) {
+                    Context context = TransactionDetailActivity.this;
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast gagal = Toast.makeText(context, "Sending Payment Data Failed.", duration);
+                    gagal.show();
+                    e.printStackTrace();
+                }
+                dialog.dismiss();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                Context context = TransactionDetailActivity.this;
+                int duration = Toast.LENGTH_SHORT;
+                Toast gagal = Toast.makeText(context, "Sending Payment Data Failed.", duration);
+                gagal.show();
+                dialog.dismiss();
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String,String> map = new HashMap<>();
+                map.put("Authorization","Bearer "+ token);
+                return map;
+            }
+        };
+
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    private void getImage() {
+        dialog.setMessage("Loading Payment Data.");
+        dialog.show();
+        String postUrl = Constant.GET_PAYMENT;
+        RequestQueue requestQueue = Volley.newRequestQueue(TransactionDetailActivity.this);
+
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("id_transaction", idtrans);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, postUrl, postData, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONObject object = response;
+                try {
+                    if (object.getBoolean("success")) {
+                        String gambarIn = (object.getString("hasil"));
+                        Bitmap a = stringToBitmap(gambarIn);
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                buktiBayar.setImageBitmap(a);
+                            }
+                        }, 3000);
+                    }
+                } catch (JSONException e) {
+                    Context context = TransactionDetailActivity.this;
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast gagal = Toast.makeText(context, "Payment Data Not Loaded.", duration);
+                    gagal.show();
+                    e.printStackTrace();
+                }
+                dialog.dismiss();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                Context context = TransactionDetailActivity.this;
+                int duration = Toast.LENGTH_SHORT;
+                Toast gagal = Toast.makeText(context, "Payment Data Not Loaded.", duration);
+                gagal.show();
+                dialog.dismiss();
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String,String> map = new HashMap<>();
+                map.put("Authorization","Bearer "+ token);
+                return map;
+            }
+        };
+
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    private String bitmapToString(Bitmap bitmap) {
+        if(bitmap!=null){
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            byte [] array = byteArrayOutputStream.toByteArray();
+            return Base64.encodeToString(array, Base64.DEFAULT);
+        }
+        return "";
+    }
+
+    private Bitmap stringToBitmap(String string) {
+        try{
+            byte[] byteArray1;
+            byteArray1 = Base64.decode(string, Base64.DEFAULT);
+            Bitmap bmp = BitmapFactory.decodeByteArray(byteArray1, 0, byteArray1.length);
+            return bmp;
+        }catch (IllegalArgumentException e){
+            e.printStackTrace();
+        }
+        Bitmap bmp = null;
+        return bmp;
     }
 }

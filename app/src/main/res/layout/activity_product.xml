@@ -46,16 +46,17 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="200dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
 
-                <com.synnapps.carouselview.CarouselView
-                    android:id="@+id/carousel"
+                <ViewFlipper
+                    android:id="@+id/image_flipper"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
+                    android:layout_height="match_parent"
+                    android:background="@android:drawable/ic_menu_rotate"
+                    android:backgroundTint="#FFFFFF"></ViewFlipper>
             </LinearLayout>
 
             <androidx.cardview.widget.CardView

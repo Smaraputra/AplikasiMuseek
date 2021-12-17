@@ -428,12 +428,12 @@ public class DBHandler extends SQLiteOpenHelper {
                 int rating = Integer.parseInt(cursor.getString(8));
                 String statusrating = (cursor.getString(9));
                 String date = (cursor.getString(10));
-                String datepay = (cursor.getString(11));
-                String deadline = (cursor.getString(12));
+                String deadline = (cursor.getString(11));
+                String statusdead = (cursor.getString(12));
                 String proof = (cursor.getString(13));
                 storeTransaction.add(new TransactionsModel(
-                        id, iduser, idprod, totaltrans, total, rating,
-                        start, end, date, status, statusrating, datepay, deadline, proof));
+                        id, iduser, idprod, start, end, total,
+                        totaltrans, status, rating, statusrating, date, deadline, statusdead, proof));
             }while (cursor.moveToNext());
         }
         cursor.close();
@@ -458,12 +458,12 @@ public class DBHandler extends SQLiteOpenHelper {
                 int rating = Integer.parseInt(cursor.getString(8));
                 String statusrating = (cursor.getString(9));
                 String date = (cursor.getString(10));
-                String datepay = (cursor.getString(11));
-                String deadline = (cursor.getString(12));
+                String deadline = (cursor.getString(11));
+                String statusdead = (cursor.getString(12));
                 String proof = (cursor.getString(13));
                 storeTransaction.add(new TransactionsModel(
-                        id, iduser, idprod, totaltrans, total, rating,
-                        start, end, date, status, statusrating, datepay, deadline, proof));
+                        id, iduser, idprod, start, end, total,
+                        totaltrans, status, rating, statusrating, date, deadline, statusdead, proof));
             }while (cursor.moveToNext());
         }
         cursor.close();

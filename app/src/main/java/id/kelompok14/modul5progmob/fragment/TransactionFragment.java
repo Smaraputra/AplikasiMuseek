@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,25 +75,22 @@ public class TransactionFragment extends Fragment {
         iduser = sharedPreferences.getInt("iduser",0);
         token = sharedPreferences.getString("token", "defaultValues");
         dialog = new ProgressDialog(getContext());
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getTransaction();
-            }
-        }, 0);
-
+        getTransaction();
         dbHandler = new DBHandler(getContext());
-        transactions = dbHandler.getTransactionOnIDUSER(iduser);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recylerview_trans);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
 
-        transactionAdapter = new TransactionAdapter(getContext(), transactions);
-        recyclerView.setAdapter(transactionAdapter);
-
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                transactions = dbHandler.getTransactionOnIDUSER(iduser);
+                transactionAdapter = new TransactionAdapter(getContext(), transactions);
+                recyclerView.setAdapter(transactionAdapter);
+            }
+        }, 1000);
     }
 
     private void getTransaction() {
@@ -126,12 +124,12 @@ public class TransactionFragment extends Fragment {
                                     transObject.getString("end_transaction"),
                                     transObject.getInt("total_product"),
                                     transObject.getInt("total_transaction"),
-                                    transObject.getString("status_rating_transaction"),
-                                    transObject.getInt("rating"),
                                     transObject.getString("status_transaction"),
+                                    transObject.getInt("rating"),
+                                    transObject.getString("status_rating_transaction"),
                                     transObject.getString("date_transaction"),
-                                    transObject.getString("status_payment"),
                                     transObject.getString("deadline_payment"),
+                                    transObject.getString("status_payment"),
                                     transObject.getString("proof"));
                         }
                     }

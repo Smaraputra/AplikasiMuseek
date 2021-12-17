@@ -21,7 +21,7 @@
             android:layout_weight="0">
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/gambarProdukLong"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_weight="0"

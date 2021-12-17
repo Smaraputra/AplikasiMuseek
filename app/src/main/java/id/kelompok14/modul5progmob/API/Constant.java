@@ -14,4 +14,9 @@ public class Constant {
     public static final String GET_CATEGORY_DETAIL=HOME+"/categorydetail";
     public static final String ADD_TRANSACTION=HOME+"/addtransaction";
     public static final String GET_TRANSACTION=HOME+"/gettransaction";
+    public static final String DELETE_TRANSACTION=HOME+"/delete/transaction";
+    public static final String EDIT_PAYMENT=HOME+"/edit/payment";
+    public static final String GET_PAYMENT=HOME+"/getbukti";
+    public static final String GET_PRODUCT_IMAGE=HOME+"/getproductimage";
+    public static final String GET_ALL_PRODUCT_IMAGE=HOME+"/getallproductimage";
 }

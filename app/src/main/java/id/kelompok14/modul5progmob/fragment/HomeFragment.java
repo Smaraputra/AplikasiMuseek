@@ -2,14 +2,19 @@ package id.kelompok14.modul5progmob.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +27,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -35,10 +41,12 @@ import java.util.Map;
 
 import id.kelompok14.modul5progmob.API.Constant;
 import id.kelompok14.modul5progmob.R;
+import id.kelompok14.modul5progmob.activity.ProductActivity;
 import id.kelompok14.modul5progmob.adapter.ProductsAdapter;
 import id.kelompok14.modul5progmob.database.DBHandler;
 import id.kelompok14.modul5progmob.model.CategoriesDetailModel;
 import id.kelompok14.modul5progmob.model.CategoriesModel;
+import id.kelompok14.modul5progmob.model.ProductImagesModel;
 import id.kelompok14.modul5progmob.model.ProductsModel;
 
 public class HomeFragment extends Fragment {
@@ -49,6 +57,7 @@ public class HomeFragment extends Fragment {
     ArrayList<CategoriesModel> categories=new ArrayList<>();
     ArrayList<CategoriesModel> categories1=new ArrayList<>();
     ArrayList<CategoriesDetailModel> categoriesDetails = new ArrayList<>();
+    ArrayList<ProductImagesModel> productImages = new ArrayList<>();
     Spinner spinnerCategory;
     ProductsAdapter productsAdapter;
     RecyclerView recyclerView;
@@ -69,20 +78,21 @@ public class HomeFragment extends Fragment {
         token = sharedPreferences.getString("token", "defaultValues");
 
         categories.add(new CategoriesModel(0, "All Products"));
+        getCategory();
+        getProduct();
+        getCategoryDetail();
+        getImage();
+
+        dbHandler = new DBHandler(getContext());
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                getCategory();
-                getProduct();
-                getCategoryDetail();
+                categories1 = dbHandler.getCategories();
+                categories.addAll(categories1);
             }
-        }, 0);
-
-        dbHandler = new DBHandler(getContext());
-        categories1 = dbHandler.getCategories();
-        categories.addAll(categories1);
+        }, 1000);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recylerview_product);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
@@ -119,21 +129,33 @@ public class HomeFragment extends Fragment {
     }
 
     void allAdapter(){
-        products = dbHandler.getProducts();
-        productsAdapter = new ProductsAdapter(getContext(), products);
-        recyclerView.setAdapter(productsAdapter);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                products = dbHandler.getProducts();
+                productsAdapter = new ProductsAdapter(getContext(), products, productImages);
+                recyclerView.setAdapter(productsAdapter);
+            }
+        }, 2000);
     }
 
     void catAdapter(int id){
-        products1.clear();
-        categoriesDetails = dbHandler.getIDProductOnCategory(id);
-        for (int counter = 0; counter < categoriesDetails.size(); counter++) {
-            int idin = categoriesDetails.get(counter).getId_product();
-            products = dbHandler.getProductsOnID(idin);
-            products1.addAll(products);
-        }
-        productsAdapter = new ProductsAdapter(getContext(), products1);
-        recyclerView.setAdapter(productsAdapter);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                products1.clear();
+                categoriesDetails = dbHandler.getIDProductOnCategory(id);
+                for (int counter = 0; counter < categoriesDetails.size(); counter++) {
+                    int idin = categoriesDetails.get(counter).getId_product();
+                    products = dbHandler.getProductsOnID(idin);
+                    products1.addAll(products);
+                }
+                productsAdapter = new ProductsAdapter(getContext(), products1, productImages);
+                recyclerView.setAdapter(productsAdapter);
+            }
+        }, 2000);
     }
 
     private void getCategory() {
@@ -152,11 +174,18 @@ public class HomeFragment extends Fragment {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                Context context = getContext();
+                int duration = Toast.LENGTH_SHORT;
+                Toast gagal = Toast.makeText(context, "Details Not Loaded.", duration);
+                gagal.show();
             }
         },new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Context context = getContext();
+                int duration = Toast.LENGTH_SHORT;
+                Toast gagal = Toast.makeText(context, "Details Not Loaded.", duration);
+                gagal.show();
             }
         }){
             @Override
@@ -185,11 +214,18 @@ public class HomeFragment extends Fragment {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                Context context = getContext();
+                int duration = Toast.LENGTH_SHORT;
+                Toast gagal = Toast.makeText(context, "Category Not Loaded.", duration);
+                gagal.show();
             }
         },new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Context context = getContext();
+                int duration = Toast.LENGTH_SHORT;
+                Toast gagal = Toast.makeText(context, "Category Not Loaded.", duration);
+                gagal.show();
             }
         }){
             @Override
@@ -212,7 +248,7 @@ public class HomeFragment extends Fragment {
                     dbHandler.deleteProduct();
                     JSONArray array = new JSONArray(object.getString("hasil"));
                     for(int i=0;i<array.length();i++){
-                        JSONObject prodObject = array.getJSONObject(i);;
+                        JSONObject prodObject = array.getJSONObject(i);
                         dbHandler.addNewProduct
                                 (prodObject.getString("name_product"),
                                 (prodObject.getString("desc_product")),
@@ -223,11 +259,18 @@ public class HomeFragment extends Fragment {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                Context context = getContext();
+                int duration = Toast.LENGTH_SHORT;
+                Toast gagal = Toast.makeText(context, "Product Not Loaded.", duration);
+                gagal.show();
             }
         },new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Context context = getContext();
+                int duration = Toast.LENGTH_SHORT;
+                Toast gagal = Toast.makeText(context, "Product Not Loaded.", duration);
+                gagal.show();
             }
         }){
             @Override
@@ -238,5 +281,49 @@ public class HomeFragment extends Fragment {
             }
         };
         queue.add(request);
+    }
+
+    private void getImage() {
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        String postUrl = Constant.GET_ALL_PRODUCT_IMAGE;
+        StringRequest request = new StringRequest(Request.Method.GET, postUrl, response -> {
+            try {
+                JSONObject object = new JSONObject(response);
+                if (object.getBoolean("success")){
+                    JSONArray arrayID = new JSONArray(object.getString("id"));
+                    JSONArray arrayHasil = new JSONArray(object.getString("hasil"));
+                    for(int i=0;i<arrayID.length();i++) {
+                        int id = (arrayID.getInt(i));
+                        String gambarIn = (arrayHasil.getString(i));
+                        productImages.add(new ProductImagesModel(id, gambarIn));
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+//                Context context = getContext();
+//                int duration = Toast.LENGTH_SHORT;
+//                Toast gagal = Toast.makeText(context, "Images Not Loaded.", duration);
+//                gagal.show();
+                getImage();
+            }
+        },new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+//                Context context = getContext();
+//                int duration = Toast.LENGTH_SHORT;
+//                Toast gagal = Toast.makeText(context, "Images Not Loaded.", duration);
+//                gagal.show();
+                getImage();
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String,String> map = new HashMap<>();
+                map.put("Authorization","Bearer "+ token);
+                return map;
+            }
+        };
+        queue.add(request);
+
     }
 }

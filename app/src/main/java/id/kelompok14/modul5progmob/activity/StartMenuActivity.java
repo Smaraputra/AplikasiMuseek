@@ -194,7 +194,7 @@ public class StartMenuActivity extends AppCompatActivity {
                 error.printStackTrace();
                 Context context = StartMenuActivity.this;
                 int duration = Toast.LENGTH_SHORT;
-                Toast gagal = Toast.makeText(context, "Login Failed.", duration);
+                Toast gagal = Toast.makeText(context, "Account Not Found. Login Failed.", duration);
                 gagal.show();
                 dialog.dismiss();
             }
